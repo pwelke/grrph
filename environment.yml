@@ -1,0 +1,13 @@
+name: grrph-dev
+channels:
+  - defaults
+dependencies:
+  # install dependencies
+  - pip>=23.3.1
+  - python>=3.12
+  - wheel>=0.41.2
+  - twine>=4.0.0
+  - pip:
+      # install dependencies
+      - build==1.0.3
+prefix: grrph-dev
