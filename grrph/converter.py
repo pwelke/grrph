@@ -1,5 +1,11 @@
 import networkx as nx
 
+import torch
+
+import torch_geometric
+from torch_geometric.data import Data
+from torch_geometric.utils.convert import from_networkx
+
 
 def graph6_to_pyg(x):
     '''convert graph6 format to pytorch_geometric object
