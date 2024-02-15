@@ -19,6 +19,8 @@ dependencies = [
   "networkx",
 ]
 
+[tool.setuptools.package-data]
+myModule = ["logprimes1.npy"]
 
 [project.urls]
 Homepage = "https://github.com/pwelke/grrph"
