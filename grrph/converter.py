@@ -52,3 +52,15 @@ def load_dimacs(file):
         G.num_nodes = g['n']
         
         return G
+
+
+def edge_index_to_csr_matrix(edge_index, edge_weights=None):
+    '''
+    returns scipy.sparse.csr_matrix for given edge_index list as used by pytorch geometric.
+    arguments: 
+        edge_index: (m, 2) shape array 
+        edge_weights: (m,) shape array of weights of the adjacency matrix. (optional. default weight 1)
+    '''
+    if edge_weights is None:
+        edge_weights = np.ones(edge_index.shape[0])
+    return scipy.sparse.csr_matrix(edge_weights, (edge_weights[0,:], edge_weights[1,:]))
