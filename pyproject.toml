@@ -17,6 +17,7 @@ dependencies = [
   "numpy",
   "scipy",
   "networkx",
+  "POT",
 ]
 
 [tool.setuptools.package-data]

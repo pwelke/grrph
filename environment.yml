@@ -7,7 +7,10 @@ dependencies:
   - python>=3.12
   - wheel>=0.41.2
   - twine>=4.0.0
+  - numpy
+  - scipy
   - pip:
       # install dependencies
-      - build==1.0.3
+      - build>=1.0.3
+      - POT>=0.9.3
 prefix: grrph-dev
