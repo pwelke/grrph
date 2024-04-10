@@ -4,7 +4,7 @@ import ot
 import sklearn.preprocessing
 
 import itertools as it
-from compare import unique_rows
+from util import unique_rows
 
 def metric_bases(distance_matrix, k):
     '''list all sets of k indices that result in unique representations when projecting.
