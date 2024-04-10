@@ -29,6 +29,7 @@ class WeisfeilerLemanPython:
 
 inp_file = (impresources.files(data) / 'logprimes1.npy')
 primes = np.load(inp_file)
+primes = primes[1:] # 1 is not a prime in the sense which we require here
 
 
 def compress(labels: np.array):
@@ -81,6 +82,44 @@ def wl_direct_scipysparse(a: sparse.csr_matrix, n_iter=5):
     return newlbl
 
 
+class TransductiveWL():
+
+    def __init__(self, n_iter=5):
+        self.n_iter = n_iter
+        self.compressed_labels = [None for _ in range(n_iter+1)]
+        self.labels = [None for _ in range(n_iter+1)]
+        self.parents = [None for _ in range(n_iter+1)]
+
+
+    def __compress(self, labels: np.array):
+        '''Weisfeiler Leman Label compression'''
+        _, inv = np.unique(labels, return_inverse=True)
+        # use the indices to uniq array to select first |uniq| primes
+        labels = primes[inv]
+        return labels, inv
+
+
+    def fit(self, a: sparse.csr_matrix, node_labels=None):
+        '''An implementation of the Weisfeiler Leman algorithm that allows to 
+        reconstruct the labeling tree. 
+        
+        input: an adjacency matrix a as scipy.sparse.csr_matrix, optional node labels, and a number of iterations
+        output: the compressed labels after n_iter iterations
+        '''
+        
+        if node_labels is None:
+            node_labels = np.ones(a.shape[0])
+
+        self.labels[0] = node_labels
+        self.compressed_labels[0], self.parents[0] = self.__compress(node_labels)
+
+        for i in range(self.n_iter):
+            self.labels[i+1] = np.pi * self.compressed_labels[i] + a @ self.compressed_labels[i]
+            self.compressed_labels[i+1], self.parents[i+1] = self.__compress(self.labels[i+1])
+
+        return self.compressed_labels[-1]    
+    
+
 def wllt_direct_scipysparse(a: sparse.csr_matrix, n_iter=5):
     '''An implementation of the Weisfeiler Leman algorithm that allows to 
     reconstruct the labeling tree. 
@@ -103,7 +142,7 @@ def wllt_direct_scipysparse(a: sparse.csr_matrix, n_iter=5):
         newparents = oldids
 
         if i < n_iter-1:
-            oldlbl, oldids = compress_inv(newlbl)
+            oldlbl, oldids = compress(newlbl)
 
     return newlbl, newparents
 
