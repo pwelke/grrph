@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 
 import torch
 
@@ -55,7 +56,7 @@ def load_dimacs(file):
         return G
 
 
-def edge_index_to_csr_matrix(edge_index, edge_weights=None):
+def edge_index_to_csr_matrix(edge_index, n, edge_weights=None):
     '''
     returns scipy.sparse.csr_matrix for given edge_index list as used by pytorch geometric.
     arguments: 
@@ -64,4 +65,7 @@ def edge_index_to_csr_matrix(edge_index, edge_weights=None):
     '''
     if edge_weights is None:
         edge_weights = np.ones(edge_index.shape[0])
-    return scipy.sparse.csr_matrix(edge_weights, (edge_weights[0,:], edge_weights[1,:]))
+    if edge_weights.shape[0] == 0:
+        return scipy.sparse.csr_matrix((n, n))
+    else:
+        return scipy.sparse.csr_matrix((edge_weights, (edge_index[:,0], edge_index[:,1])), shape=(n,n))
